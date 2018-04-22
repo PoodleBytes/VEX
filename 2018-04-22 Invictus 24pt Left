@@ -30,20 +30,9 @@ void pre_auton()
 	bDisplayCompetitionStatusOnLcd = false;
 	slaveMotor(armRight,armLeft);
 	slaveMotor(heightRight,heightLeft);
-
-	//intialize IME
-	//Completely clear out any previous sensor readings by setting the port to "sensorNone"
-	//SensorType[I2C_1] = sensorNone;
-	//SensorType[I2C_2] = sensorNone;
-	//wait1Msec(1000);
-	//Reconfigure Analog Port 8 as a Gyro sensor and allow time for ROBOTC to calibrate it
-	//SensorType[I2C_1] = sensorQuadEncoderOnI2CPort;
-	//SensorType[I2C_2] = sensorQuadEncoderOnI2CPort;
-	//wait1Msec(2000);
 }//end pre_run
 
-
-//IT IS IMPERITIVE CO CONFIRM THE VARIABLES vs SENSOR VALUES frequently!!!
+// global varaibles
 int armMax = 4000;	//armPot's value at max angle
 int coneZone = armMax; //'sweet-spot' armPot reading where claw is intent on dropping cone. threshold where claw in danger
 int greyZone = 800; //+- range grey-area where arm's between arm being forward & backward
@@ -52,8 +41,6 @@ int clawOpen = -40; //claw open direction / power
 int pause1 = 300;	//first delay
 int iBrake = 50;
 int clawPower = 0;
-
-// global varaibles
 int deadband = 20;
 int MAX_POWER = 100;
 int leftPower = 0;
@@ -61,7 +48,7 @@ int rightPower = 0;
 int armAngle = 0;
 int goalerAngle = 0;
 
-void eDrive(int l, int r, int e){
+void eDrive(int l, int r, int e){		//drive by IME encoder value
 	resetMotorEncoder(rightFront);		//sero Integrated Motor Controllers (IME )
 	resetMotorEncoder(leftFront);
 	wait1Msec(pause1);
@@ -79,7 +66,7 @@ void eDrive(int l, int r, int e){
 	motor[leftRear] = motor[leftFront]=0;
 }//end eDrive
 
-void tDrive(int l, int r, int t){
+void tDrive(int l, int r, int t){		//drive by timer
 	wait1Msec(pause1);
 	motor[rightRear] = motor[rightFront]=r;
 	motor[leftRear] = motor[leftFront]=l;
@@ -99,6 +86,7 @@ task autonomous()  //BATTERY AT 7.3 volts
 	//ZERO ENCODERS
 	resetMotorEncoder(rightFront);		//sero Integrated Motor Controllers (IME )
 	resetMotorEncoder(leftFront);
+
 	//pickup claw & hold
 	motor[clawMotor]=MAX_POWER;
 	wait1Msec(500);
